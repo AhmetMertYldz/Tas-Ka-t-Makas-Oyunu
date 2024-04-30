@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taş Kağıt Makas Oyunu</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+}
+
+#game-container {
+    width: 300px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+#result {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#choices {
+    margin-bottom: 20px;
+}
+
+#choices button {
+    margin: 0 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#score {
+    font-size: 18px;
+}
+
+#game-over {
+    display: none;
+    font-size: 36px;
+    color: red;
+}
+
+#game-info {
+    font-size: 14px;
+    text-align: left;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%;
+}
+</style>
+</head>
+<body>
+<div id="game-container">
+    <div id="game-info">
+        <h3>Oyunun Amacı ve Kuralları:</h3>
+        <p>- Oyuncular taş, kağıt veya makas seçerek oyunu oynarlar.</p>
+        <p>- Taş makası, makas kağıdı, kağıt ise taşı yener.</p>
+        <p>- Her kazanılan elde 1 skor kazanılır ve ilk 5 skora ulaşan oyuncu oyunu kazanır.</p>
+    </div>
+    <div id="result"></div>
+    <div id="choices">
+        <!-- oyuncu seçimini yapacak butonları ekledim -->
+        <button onclick="secim('tas')">Taş</button>
+        <button onclick="secim('kagit')">Kağıt</button>
+        <button onclick="secim('makas')">Makas</button>
+    </div>
+    <div id="score">Skor: <span id="oyuncu_skoru">0</span> - <span id="pc_skoru">0</span></div>
+    <div id="game-over">Oyun Bitti!</div>
+</div>
+<script>
+// oyuncu ve bilgisayarın skorlarını tutacak değişkenleri ekledim
+let oyuncu_skoru = 0;
+let bilgisayar_skoru = 0;
+
+// oyuncunun seçim yapmasını sağlayan fonksiyonları ekledim
+function secim(oyuncusecimi) {
+    // Bilgisayarın rastgele seçim yapabilmesi için dizi oluşturdm
+    const choices = ['tas', 'kagit', 'makas'];
+
+    const bilgisayarSecimi = choices[Math.floor(Math.random() * 3)];
+
+    // oyuncu ve bilgisayarın seçimini ekrana yazdırdım
+    document.getElementById('result').innerText = `Oyuncunun Seçimi: ${oyuncusecimi} - Bilgisayarın Seçimi: ${bilgisayarSecimi}`;
+
+    // kazananı döngüler yardımı ile belirledmi
+    if (oyuncusecimi === bilgisayarSecimi) {
+        document.getElementById('result').innerText += '\nBerabere!';
+    } else if (
+        (oyuncusecimi === 'tas' && bilgisayarSecimi === 'makas') ||
+        (oyuncusecimi === 'kagit' && bilgisayarSecimi === 'tas') ||
+        (oyuncusecimi === 'makas' && bilgisayarSecimi === 'kagit')
+    ) {
+        document.getElementById('result').innerText += '\nOyuncu Kazandı!';
+        oyuncu_skoru++;
+    } else {
+        document.getElementById('result').innerText += '\nBilgisayar Kazandı!';
+        bilgisayar_skoru++;
+    }
+
+    // skorları güncellemek için 
+    document.getElementById('oyuncu_skoru').innerText = oyuncu_skoru;
+    document.getElementById('pc_skoru').innerText = bilgisayar_skoru;
+
+    // hangi taraf önce 5 e ulaşırsa oyun biter
+    if (oyuncu_skoru === 5 || bilgisayar_skoru === 5) {
+        document.getElementById('game-over').style.display = 'block';
+        oyuncu_skoru = 0;
+        bilgisayar_skoru = 0;
+        document.getElementById('oyuncu_skoru').innerText = oyuncu_skoru;
+        document.getElementById('pc_skoru').innerText = bilgisayar_skoru;
+    }
+}
+</script>
+</body>
+</html>
